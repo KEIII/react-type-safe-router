@@ -1,11 +1,12 @@
 import { RouteSwitch } from './router/RouteSwitch';
-import { createRoute, Route } from './router/route';
+import { createRoute } from './router/createRoute';
 import { Link } from './router/Link';
-import { BrowserRouter } from './router/BrowserRouter';
+import { BrowserRouter as Router } from './router/BrowserRouter';
 import { FC } from 'react';
 import * as t from 'io-ts';
 import { NumberFromString } from './NumberFromString';
 import * as O from 'fp-ts/Option';
+import { Route } from './router/types';
 
 const page = (name: string): FC => {
   return props => (
@@ -36,7 +37,7 @@ const notFound: Route = {
 
 const home: Route = {
   uri: () => '/',
-  match: pathname => (pathname === '/' ? O.some(null) : O.none),
+  match: uri => (uri === '/' ? O.some(null) : O.none),
   component: page('Home'),
 };
 
@@ -44,7 +45,7 @@ const routeMap = {
   home,
   colourShape: createRoute({
     decoder: t.type({ colour: t.string, shape: t.string }),
-    template: '/date/c-{colour}/s-{shape}/',
+    template: '/date/c-{colour}/s-{shape}/{?a,b}',
     component: page('Color & Shape'),
   }),
   items: createRoute({
@@ -64,7 +65,7 @@ const routeList = Object.values(routeMap) as Route[];
 
 export const App = () => {
   return (
-    <BrowserRouter>
+    <Router>
       <ul>
         <li>
           <Link uri={routeMap.home.uri()}>Home</Link>
@@ -84,6 +85,6 @@ export const App = () => {
         </li>
       </ul>
       <RouteSwitch routes={routeList} />
-    </BrowserRouter>
+    </Router>
   );
 };

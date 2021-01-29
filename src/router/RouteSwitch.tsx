@@ -1,15 +1,15 @@
 import { FC } from 'react';
-import { Route } from './route';
 import * as O from 'fp-ts/Option';
-import { usePathname } from './usePathname';
+import { useActiveUri } from './useActiveUri';
+import { Route } from './types';
 
 /**
  * Renders the first one that matches the current URL.
  */
 export const RouteSwitch: FC<{ routes: Route[] }> = ({ routes }) => {
-  const activePathname = usePathname();
+  const activeUri = useActiveUri();
   for (const route of routes) {
-    const params = route.match(activePathname);
+    const params = route.match(activeUri);
     if (O.isSome(params)) {
       const props = params.value;
       return props !== null && typeof props === 'object' ? (

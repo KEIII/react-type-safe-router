@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useRouter } from './RouterContext';
-import { usePathname } from './usePathname';
+import { useActiveUri } from './useActiveUri';
 
 type P = {
   uri: string;
@@ -9,7 +9,7 @@ type P = {
 
 export const Link: FC<P> = props => {
   const router = useRouter();
-  const active = usePathname() === props.uri;
+  const active = useActiveUri() === props.uri;
   return (
     <a
       className={active ? props.active : ''}

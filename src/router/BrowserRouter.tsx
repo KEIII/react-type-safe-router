@@ -3,14 +3,18 @@ import { RouterContext } from './RouterContext';
 import { Router } from './types';
 
 const browserRouter = ((): Router => {
-  const pathname = () => window.location.pathname;
+  const uri = () => {
+    let p = window.location.pathname;
+    const q = window.location.search;
+    return q ? `${p}${q}` : p;
+  };
   const observers = new Map<symbol, Function>();
-  const fireEvent = () => observers.forEach(observer => observer(pathname()));
+  const fireEvent = () => observers.forEach(observer => observer(uri()));
 
   window.addEventListener('popstate', fireEvent);
 
   return {
-    pathname,
+    uri,
     push: uri => {
       window.history.pushState(null, '', uri);
       fireEvent();

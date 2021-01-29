@@ -1,13 +1,13 @@
 import { useRouter } from './RouterContext';
 import { useLayoutEffect, useState } from 'react';
 
-export const usePathname = () => {
+export const useActiveUri = () => {
   const router = useRouter();
-  const [pathname, setPathname] = useState(router.pathname);
+  const [uri, setUri] = useState(router.uri);
 
   useLayoutEffect(() => {
-    return router.subscribe(setPathname);
+    return router.subscribe(setUri);
   }, [router]);
 
-  return pathname;
+  return uri;
 };

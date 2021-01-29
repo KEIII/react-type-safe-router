@@ -3,7 +3,9 @@ import { createRoute, Route } from './router/route';
 import { Link } from './router/Link';
 import { BrowserRouter } from './router/BrowserRouter';
 import { FC } from 'react';
-import { some } from './router/option';
+import * as t from 'io-ts';
+import { NumberFromString } from './NumberFromString';
+import * as O from 'fp-ts/Option';
 
 const page = (name: string): FC => {
   return props => (
@@ -25,7 +27,7 @@ const itemList = () => {
 };
 
 const notFound: Route = {
-  match: () => some(null),
+  match: () => O.some(null),
   build: () => {
     throw new Error('Logic Error');
   },
@@ -34,18 +36,22 @@ const notFound: Route = {
 
 const routeMap = {
   home: createRoute({
+    decoder: t.unknown,
     template: '/',
     component: page('Home'),
   }),
-  rfc: createRoute({
-    template: '/date/{colour}/{shape}/',
+  colourShape: createRoute({
+    decoder: t.type({ colour: t.string, shape: t.string }),
+    template: '/date/c-{colour}/s-{shape}/',
     component: page('Color & Shape'),
   }),
   items: createRoute({
+    decoder: t.unknown,
     template: '/items',
     component: itemList,
   }),
   item: createRoute({
+    decoder: t.type({ id: NumberFromString }),
     template: '/item/{id}',
     component: page('Item Detail'),
   }),
@@ -65,7 +71,14 @@ export const App = () => {
           <Link url={routeMap.items.build({})}>Items</Link>
         </li>
         <li>
-          <Link url={routeMap.rfc.build({})}>RFC 6570</Link>
+          <Link
+            url={routeMap.colourShape.build({
+              colour: 'orange',
+              shape: 'cube',
+            })}
+          >
+            Colour & Shape
+          </Link>
         </li>
       </ul>
       <RouteSwitch routes={routeList} />

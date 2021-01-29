@@ -1,7 +1,7 @@
 import { FC, useLayoutEffect, useState } from 'react';
 import { Route } from './route';
 import { useRouter } from './RouterContext';
-import { isSome } from './option';
+import * as O from 'fp-ts/Option';
 
 const usePathname = () => {
   const router = useRouter();
@@ -17,7 +17,7 @@ export const RouteSwitch: FC<{ routes: Route[] }> = ({ routes }) => {
   const pathname = usePathname();
   for (const route of routes) {
     const params = route.match(pathname);
-    if (isSome(params)) {
+    if (O.isSome(params)) {
       return <route.component params={params.value} />;
     }
   }

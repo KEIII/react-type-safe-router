@@ -4,6 +4,10 @@ import { Decoder } from 'io-ts';
 import * as O from 'fp-ts/Option';
 import { Route, UriGenerator } from './types';
 
+/**
+ * Create router based on RFC 6570 template.
+ * @link https://tools.ietf.org/html/rfc6570
+ */
 export const createRoute = <A>(args: {
   decoder: Decoder<unknown, A>;
   template: string;

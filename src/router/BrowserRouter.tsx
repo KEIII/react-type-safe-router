@@ -4,9 +4,8 @@ import { Router } from './types';
 
 const browserRouter = ((): Router => {
   const uri = () => {
-    let p = window.location.pathname;
-    const q = window.location.search;
-    return q ? `${p}${q}` : p;
+    const l = window.location;
+    return [l.pathname, l.search, l.hash].join('');
   };
   const observers = new Map<symbol, Function>();
   const fireEvent = () => observers.forEach(observer => observer(uri()));

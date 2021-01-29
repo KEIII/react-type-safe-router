@@ -1,30 +1,24 @@
 import { FC } from 'react';
-import UrlPattern from 'url-pattern';
+import utpl from 'uri-templates';
+import { none, Option, some } from './option';
 
-type ParamValue = string | number;
-
-export type RouteParams<T> = string extends T
-  ? Record<ParamValue, ParamValue>
-  : T extends `${infer _}:${infer Param}/${infer Rest}`
-  ? { [k in Param | keyof RouteParams<Rest>]: ParamValue }
-  : T extends `${infer _}:${infer Param}`
-  ? { [k in Param]: ParamValue }
-  : {};
-
-export type Route<T = unknown> = {
-  match: (pathname: string) => boolean;
-  build: (params: RouteParams<T>) => string;
-  component: FC;
+export type Route<A = unknown> = {
+  match: (pathname: string) => Option<A>;
+  build: (params: A) => string;
+  component: FC<{ params: A }>;
 };
 
-export const createRoute = <T extends string>(x: {
-  template: T;
+export const createRoute = <A>(x: {
+  template: string;
   component: FC;
-}): Route<T> => {
-  const pattern = new UrlPattern(x.template);
+}): Route<A> => {
+  const uriTemplate = utpl(x.template);
   return {
-    match: pathname => pattern.match(pathname) !== null,
-    build: params => pattern.stringify(params),
+    match: pathname => {
+      const params = uriTemplate.fromUri(pathname) as any; // todo: no any
+      return params ? some(params) : none;
+    },
+    build: params => uriTemplate.fillFromObject(params as any), // todo: no any
     component: x.component,
   };
 };

@@ -20,7 +20,7 @@ const itemList = () => {
   return (
     <ul>
       <li>
-        <Link url={routeMap.item.uri({ id: 1 })}>Item ID=1</Link>
+        <Link uri={routeMap.item.uri({ id: 1 })}>Item ID=1</Link>
       </li>
     </ul>
   );
@@ -34,12 +34,14 @@ const notFound: Route = {
   component: () => <div>Not Found</div>,
 };
 
+const home: Route = {
+  uri: () => '/',
+  match: pathname => (pathname === '/' ? O.some(null) : O.none),
+  component: page('Home'),
+};
+
 const routeMap = {
-  home: createRoute({
-    decoder: t.unknown,
-    template: '/',
-    component: page('Home'),
-  }),
+  home,
   colourShape: createRoute({
     decoder: t.type({ colour: t.string, shape: t.string }),
     template: '/date/c-{colour}/s-{shape}/',
@@ -65,14 +67,14 @@ export const App = () => {
     <BrowserRouter>
       <ul>
         <li>
-          <Link url={routeMap.home.uri()}>Home</Link>
+          <Link uri={routeMap.home.uri()}>Home</Link>
         </li>
         <li>
-          <Link url={routeMap.items.uri()}>Items</Link>
+          <Link uri={routeMap.items.uri()}>Items</Link>
         </li>
         <li>
           <Link
-            url={routeMap.colourShape.uri({
+            uri={routeMap.colourShape.uri({
               colour: 'orange',
               shape: 'cube',
             })}

@@ -11,12 +11,12 @@ const browserRouter = ((): Router => {
 
   return {
     pathname,
-    push: url => {
-      window.history.pushState(null, '', url);
+    push: uri => {
+      window.history.pushState(null, '', uri);
       fireEvent();
     },
-    replace: url => {
-      window.history.replaceState(null, '', url);
+    replace: uri => {
+      window.history.replaceState(null, '', uri);
       fireEvent();
     },
     subscribe: observer => {

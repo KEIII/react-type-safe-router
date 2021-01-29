@@ -1,24 +1,22 @@
-import { FC, useLayoutEffect, useState } from 'react';
+import { FC } from 'react';
 import { Route } from './route';
-import { useRouter } from './RouterContext';
 import * as O from 'fp-ts/Option';
-
-const usePathname = () => {
-  const router = useRouter();
-  const [pathname, setPathname] = useState(router.pathname);
-  useLayoutEffect(() => router.subscribe(setPathname), [router]);
-  return pathname;
-};
+import { usePathname } from './usePathname';
 
 /**
  * Renders the first one that matches the current URL.
  */
 export const RouteSwitch: FC<{ routes: Route[] }> = ({ routes }) => {
-  const pathname = usePathname();
+  const activePathname = usePathname();
   for (const route of routes) {
-    const params = route.match(pathname);
+    const params = route.match(activePathname);
     if (O.isSome(params)) {
-      return <route.component params={params.value} />;
+      const props = params.value;
+      return props !== null && typeof props === 'object' ? (
+        <route.component {...props} />
+      ) : (
+        <route.component />
+      );
     }
   }
   return <></>;

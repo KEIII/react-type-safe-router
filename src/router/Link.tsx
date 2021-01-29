@@ -1,17 +1,25 @@
 import { FC } from 'react';
 import { useRouter } from './RouterContext';
+import { usePathname } from './usePathname';
 
-export const Link: FC<{ url: string }> = ({ url, children }) => {
+type P = {
+  uri: string;
+  active?: string;
+};
+
+export const Link: FC<P> = props => {
   const router = useRouter();
+  const active = usePathname() === props.uri;
   return (
     <a
-      href={url}
+      className={active ? props.active : ''}
+      href={props.uri}
       onClick={event => {
         event.preventDefault();
-        router.push(url);
+        router.push(props.uri);
       }}
     >
-      {children}
+      {props.children}
     </a>
   );
 };

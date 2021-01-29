@@ -3,16 +3,18 @@ import utpl from 'uri-templates';
 import { Decoder } from 'io-ts';
 import * as O from 'fp-ts/Option';
 
+type Uri<A> = A extends object ? (params: A) => string : () => string;
+
 export type Route<A = unknown> = {
   match: (pathname: string) => O.Option<A>;
-  uri: A extends object ? (params: A) => string : () => string;
-  component: FC<{ params: A }>;
+  uri: Uri<A>;
+  component: FC<A>;
 };
 
 export const createRoute = <A>(args: {
   decoder: Decoder<unknown, A>;
   template: string;
-  component: FC;
+  component: FC<A>;
 }): Route<A> => {
   const uriTemplate = utpl(args.template);
   return {
@@ -22,8 +24,8 @@ export const createRoute = <A>(args: {
       return O.fromEither(args.decoder.decode(params));
     },
     uri: ((params?: A) => {
-      return uriTemplate.fillFromObject(params ?? {});
-    }) as any,
+      return uriTemplate.fill(params ?? {});
+    }) as Uri<A>,
     component: args.component,
   };
 };

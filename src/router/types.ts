@@ -1,10 +1,10 @@
-type Observer = (url: string) => void;
+type Observer = (uri: string) => void;
 
 type Unsubscribe = () => void;
 
 export type Router = {
   pathname: () => string;
-  push: (url: string) => void;
-  replace: (url: string) => void;
+  push: (uri: string) => void;
+  replace: (uri: string) => void;
   subscribe: (observer: Observer) => Unsubscribe;
 };

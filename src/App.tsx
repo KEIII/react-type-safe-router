@@ -20,7 +20,7 @@ const itemList = () => {
   return (
     <ul>
       <li>
-        <Link url={routeMap.item.build({ id: 1 })}>Item ID=1</Link>
+        <Link url={routeMap.item.uri({ id: 1 })}>Item ID=1</Link>
       </li>
     </ul>
   );
@@ -28,7 +28,7 @@ const itemList = () => {
 
 const notFound: Route = {
   match: () => O.some(null),
-  build: () => {
+  uri: () => {
     throw new Error('Logic Error');
   },
   component: () => <div>Not Found</div>,
@@ -65,14 +65,14 @@ export const App = () => {
     <BrowserRouter>
       <ul>
         <li>
-          <Link url={routeMap.home.build({})}>Home</Link>
+          <Link url={routeMap.home.uri()}>Home</Link>
         </li>
         <li>
-          <Link url={routeMap.items.build({})}>Items</Link>
+          <Link url={routeMap.items.uri()}>Items</Link>
         </li>
         <li>
           <Link
-            url={routeMap.colourShape.build({
+            url={routeMap.colourShape.uri({
               colour: 'orange',
               shape: 'cube',
             })}

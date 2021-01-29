@@ -5,7 +5,7 @@ import * as O from 'fp-ts/Option';
 
 export type Route<A = unknown> = {
   match: (pathname: string) => O.Option<A>;
-  build: (params: A) => string;
+  uri: A extends object ? (params: A) => string : () => string;
   component: FC<{ params: A }>;
 };
 
@@ -21,10 +21,9 @@ export const createRoute = <A>(args: {
       if (params === undefined) return O.none; // unmatched
       return O.fromEither(args.decoder.decode(params));
     },
-    build: params => {
-      const vars = params !== null && typeof params === 'object' ? params : {};
-      return uriTemplate.fillFromObject(vars);
-    },
+    uri: ((params?: A) => {
+      return uriTemplate.fillFromObject(params ?? {});
+    }) as any,
     component: args.component,
   };
 };

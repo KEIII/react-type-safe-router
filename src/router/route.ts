@@ -5,9 +5,9 @@ type ParamValue = string | number;
 
 export type RouteParams<T> = string extends T
   ? Record<ParamValue, ParamValue>
-  : T extends `${infer _Start}:${infer Param}/${infer Rest}`
+  : T extends `${infer _}:${infer Param}/${infer Rest}`
   ? { [k in Param | keyof RouteParams<Rest>]: ParamValue }
-  : T extends `${infer _Start}:${infer Param}`
+  : T extends `${infer _}:${infer Param}`
   ? { [k in Param]: ParamValue }
   : {};
 

@@ -1,6 +1,13 @@
-import { FC } from 'react';
-import { usePathname } from './usePathname';
+import { FC, useLayoutEffect, useState } from 'react';
 import { Route } from './route';
+import { useRouter } from './RouterContext';
+
+const usePathname = () => {
+  const router = useRouter();
+  const [pathname, setPathname] = useState(router.pathname);
+  useLayoutEffect(() => router.subscribe(setPathname), [router]);
+  return pathname;
+};
 
 /**
  * Renders the first one that matches the current URL.

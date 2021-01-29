@@ -1,6 +1,7 @@
 import { RouteSwitch } from './router/RouteSwitch';
 import { createRoute, Route } from './router/route';
 import { Link } from './router/Link';
+import { BrowserRouter } from './router/BrowserRouter';
 
 const page = (name: string) => () => <div>Page {name}</div>;
 
@@ -42,7 +43,7 @@ const routeList = Object.values(routeMap) as Route[];
 
 export const App = () => {
   return (
-    <div>
+    <BrowserRouter>
       <ul>
         <li>
           <Link url={routeMap.home.build({})}>Home</Link>
@@ -52,6 +53,6 @@ export const App = () => {
         </li>
       </ul>
       <RouteSwitch routes={routeList} />
-    </div>
+    </BrowserRouter>
   );
 };

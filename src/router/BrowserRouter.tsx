@@ -13,7 +13,6 @@ const browserRouter = ((): Router => {
   window.addEventListener('popstate', fireEvent);
 
   return {
-    uri,
     push: uri => {
       window.history.pushState(null, '', uri);
       fireEvent();
@@ -25,6 +24,7 @@ const browserRouter = ((): Router => {
     subscribe: observer => {
       const uid = Symbol();
       observers.set(uid, observer);
+      observer(uri());
       return () => void observers.delete(uid);
     },
   };

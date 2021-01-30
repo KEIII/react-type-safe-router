@@ -12,12 +12,18 @@ export type Router = {
   subscribe: (observer: Observer) => Unsubscribe;
 };
 
-export type UriGenerator<A> = A extends object
-  ? (params: A) => string
-  : () => string;
-
-export type Route<A = unknown> = {
+export type RouteWithParams<A extends Record<string, any>> = {
   match: (uri: string) => O.Option<A>;
-  uri: UriGenerator<A>;
+  uri: (params: A) => string;
   component: FC<A>;
 };
+
+export type RouteSimple = {
+  match: (uri: string) => O.Option<null>;
+  uri: () => string;
+  component: FC;
+};
+
+export type Route<A = unknown> = A extends Record<string, any>
+  ? RouteWithParams<A>
+  : RouteSimple;

@@ -1,5 +1,5 @@
 import { RouteSwitch } from './router/RouteSwitch';
-import { createRoute } from './router/createRoute';
+import { routeSimple, routeWithParams } from './router/createRouteP';
 import { Link } from './router/Link';
 import { BrowserRouter as Router } from './router/BrowserRouter';
 import { FC } from 'react';
@@ -43,17 +43,16 @@ const home: Route = {
 
 const routeMap = {
   home,
-  colourShape: createRoute({
+  colourShape: routeWithParams({
     decoder: t.type({ colour: t.string, shape: t.string }),
     template: '/date/c-{colour}/s-{shape}/{?a,b}',
     component: page('Color & Shape'),
   }),
-  items: createRoute({
-    decoder: t.type({}),
+  items: routeSimple({
     template: '/items',
     component: itemList,
   }),
-  item: createRoute({
+  item: routeWithParams({
     decoder: t.type({ id: NumberFromString }),
     template: '/item/{id}',
     component: page('Item Detail'),
@@ -71,7 +70,7 @@ export const App = () => {
           <Link uri={routeMap.home.uri()}>Home</Link>
         </li>
         <li>
-          <Link uri={routeMap.items.uri({})}>Items</Link>
+          <Link uri={routeMap.items.uri()}>Items</Link>
         </li>
         <li>
           <Link

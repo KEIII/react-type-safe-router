@@ -49,7 +49,7 @@ const routeMap = {
     component: page('Color & Shape'),
   }),
   items: createRoute({
-    decoder: t.unknown,
+    decoder: t.type({}),
     template: '/items',
     component: itemList,
   }),
@@ -71,7 +71,7 @@ export const App = () => {
           <Link uri={routeMap.home.uri()}>Home</Link>
         </li>
         <li>
-          <Link uri={routeMap.items.uri()}>Items</Link>
+          <Link uri={routeMap.items.uri({})}>Items</Link>
         </li>
         <li>
           <Link

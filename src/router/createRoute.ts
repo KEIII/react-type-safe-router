@@ -9,7 +9,7 @@ import { flow } from 'fp-ts/function';
 type DecoderT<A> = Decoder<unknown, A> & HasProps;
 
 /**
- * Create router based on RFC 6570 template.
+ * Create route based on RFC 6570 template.
  * @link https://tools.ietf.org/html/rfc6570
  */
 export const routeWithParams = <A extends Record<string, unknown>>(args: {
@@ -30,8 +30,7 @@ export const routeWithParams = <A extends Record<string, unknown>>(args: {
 };
 
 /**
- * Create router based on pathname.
- * @link https://tools.ietf.org/html/rfc6570
+ * Create route based on pathname.
  */
 export const routeSimple = (args: {
   pathname: string;

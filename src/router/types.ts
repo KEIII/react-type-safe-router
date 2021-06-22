@@ -1,28 +1,26 @@
-import * as O from 'fp-ts/Option';
+import { Option } from 'fp-ts/Option';
 import { FC } from 'react';
-
-type Observer = (uri: string) => void;
-
-type Unsubscribe = () => void;
+import { BehaviourSubject } from '@keiii/k-stream';
+import URI from 'urijs';
 
 export type Router = {
-  push: (uri: string) => void;
-  replace: (uri: string) => void;
-  subscribe: (observer: Observer) => Unsubscribe;
+  uri: BehaviourSubject<URI>;
+  push: (uri: URI) => void;
+  replace: (uri: URI) => void;
 };
 
-export type RouteWithParams<A extends Record<string, any>> = {
-  match: (uri: string) => O.Option<A>;
-  uri: (params: A) => string;
+export type RouteWithParams<A extends Record<string, unknown>> = {
+  match: (uri: URI) => Option<A>;
+  uri: (params: A) => URI;
   component: FC<A>;
 };
 
 export type RouteSimple = {
-  match: (uri: string) => O.Option<null>;
-  uri: () => string;
+  match: (uri: URI) => Option<null>;
+  uri: () => URI;
   component: FC;
 };
 
-export type Route<A = unknown> = A extends Record<string, any>
+export type Route<A = unknown> = A extends Record<string, unknown>
   ? RouteWithParams<A>
   : RouteSimple;

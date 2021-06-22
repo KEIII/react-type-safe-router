@@ -1,12 +1,13 @@
 import { RouteSwitch } from './router/RouteSwitch';
-import { routeSimple, routeWithParams } from './router/createRouteP';
-import { Link } from './router/Link';
-import { BrowserRouter as Router } from './router/BrowserRouter';
 import { FC } from 'react';
 import * as t from 'io-ts';
 import { NumberFromString } from './NumberFromString';
-import * as O from 'fp-ts/Option';
+import * as Option from 'fp-ts/Option';
 import { Route } from './router/types';
+import { useRouter } from './router/RouterContext';
+import { routeSimple, routeWithParams } from './router/createRoute';
+import URI from 'urijs';
+import { BrowserRouterProvider as RouterProvider } from './router/BrowserRouterProvider';
 
 const page = (name: string): FC => {
   return props => (
@@ -14,6 +15,21 @@ const page = (name: string): FC => {
       <div>Page {name}</div>
       <pre>{JSON.stringify(props)}</pre>
     </div>
+  );
+};
+
+const Link: FC<{ uri: URI }> = props => {
+  const router = useRouter();
+  return (
+    <a
+      href={props.uri.href()}
+      onClick={e => {
+        e.preventDefault();
+        router.push(props.uri);
+      }}
+    >
+      {props.children}
+    </a>
   );
 };
 
@@ -28,18 +44,17 @@ const itemList = () => {
 };
 
 const notFound: Route = {
-  match: () => O.some(null),
+  match: () => Option.some(null),
   uri: () => {
     throw new Error('Logic Error');
   },
   component: () => <div>Not Found</div>,
 };
 
-const home: Route = {
-  uri: () => '/',
-  match: uri => (uri === '/' ? O.some(null) : O.none),
+const home = routeSimple({
+  pathname: '/',
   component: page('Home'),
-};
+});
 
 const routeMap = {
   home,
@@ -49,7 +64,7 @@ const routeMap = {
     component: page('Color & Shape'),
   }),
   items: routeSimple({
-    template: '/items',
+    pathname: '/items',
     component: itemList,
   }),
   item: routeWithParams({
@@ -64,7 +79,7 @@ const routeList = Object.values(routeMap) as Route[];
 
 export const App = () => {
   return (
-    <Router>
+    <RouterProvider>
       <ul>
         <li>
           <Link uri={routeMap.home.uri()}>Home</Link>
@@ -84,6 +99,6 @@ export const App = () => {
         </li>
       </ul>
       <RouteSwitch routes={routeList} />
-    </Router>
+    </RouterProvider>
   );
 };

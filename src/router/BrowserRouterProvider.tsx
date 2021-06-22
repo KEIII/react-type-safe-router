@@ -1,0 +1,38 @@
+import { FC } from 'react';
+import { RouterContext } from './RouterContext';
+import { Router } from './types';
+import { ksBehaviourSubject } from '@keiii/k-stream';
+import URI from 'urijs';
+
+const router = ((): Router => {
+  const getUri = () => new URI(window.location).origin('');
+
+  const uri = ksBehaviourSubject(getUri());
+
+  const fireEvent = () => {
+    const nextUri = getUri();
+    if (!uri.value.equals(nextUri)) {
+      uri.next(nextUri);
+    }
+  };
+
+  window.addEventListener('popstate', fireEvent);
+
+  return {
+    uri,
+    push: uri => {
+      window.history.pushState(null, '', String(uri));
+      fireEvent();
+    },
+    replace: uri => {
+      window.history.replaceState(null, '', String(uri));
+      fireEvent();
+    },
+  };
+})();
+
+export const BrowserRouterProvider: FC = ({ children }) => {
+  return (
+    <RouterContext.Provider value={router}>{children}</RouterContext.Provider>
+  );
+};

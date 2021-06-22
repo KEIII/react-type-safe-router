@@ -1,8 +1,10 @@
 import { FC } from 'react';
 import utpl from 'uri-templates';
 import { Decoder, exact, HasProps } from 'io-ts';
-import * as O from 'fp-ts/Option';
+import * as Option from 'fp-ts/Option';
 import { RouteWithParams, RouteSimple } from './types';
+import URI from 'urijs';
+import { flow } from 'fp-ts/function';
 
 type DecoderT<A> = Decoder<unknown, A> & HasProps;
 
@@ -10,39 +12,37 @@ type DecoderT<A> = Decoder<unknown, A> & HasProps;
  * Create router based on RFC 6570 template.
  * @link https://tools.ietf.org/html/rfc6570
  */
-export const routeWithParams = <A extends Record<string, any>>(args: {
+export const routeWithParams = <A extends Record<string, unknown>>(args: {
   decoder: DecoderT<A>;
   template: string;
   component: FC<A>;
 }): RouteWithParams<A> => {
   const uriTemplate = utpl(args.template);
-  const decoder = exact(args.decoder);
+  const { decode, encode } = exact(args.decoder);
   return {
-    match: uri => {
-      const params = uriTemplate.fromUri(uri) as unknown;
-      if (params === undefined) return O.none; // unmatched
-      return O.fromEither(decoder.decode(params));
-    },
-    uri: params => uriTemplate.fill(params),
+    match: flow(
+      flow(String, uriTemplate.fromUri, Option.fromNullable),
+      Option.chain(flow(decode, Option.fromEither)),
+    ),
+    uri: params => new URI(uriTemplate.fill(encode(params))),
     component: args.component,
   };
 };
 
 /**
- * Create router based on RFC 6570 template.
+ * Create router based on pathname.
  * @link https://tools.ietf.org/html/rfc6570
  */
 export const routeSimple = (args: {
-  template: string;
+  pathname: string;
   component: FC;
 }): RouteSimple => {
-  const uriTemplate = utpl(args.template);
+  const routeUri = new URI({ path: args.pathname });
   return {
     match: uri => {
-      const params = uriTemplate.fromUri(uri) as unknown;
-      return params !== undefined ? O.some(null) : O.none;
+      return routeUri.path() === uri.path() ? Option.some(null) : Option.none;
     },
-    uri: () => uriTemplate.fill({}),
+    uri: () => routeUri,
     component: args.component,
   };
 };

@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react';
+
+import { useBehaviourSubject } from './useBehaviourSubject';
 import { Router } from './types';
-import { useSubject } from './useSubject';
 
 export const RouterContext = createContext<Router | null>(null);
 
@@ -12,4 +13,4 @@ export const useRouter = (): Router => {
   return router;
 };
 
-export const useActiveUri = () => useSubject(useRouter().uri);
+export const useActiveUri = () => useBehaviourSubject(useRouter().uri);

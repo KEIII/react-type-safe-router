@@ -1,7 +1,8 @@
-import { FC } from 'react';
 import * as Option from 'fp-ts/Option';
-import { Route } from './types';
+import { FC } from 'react';
+
 import { useActiveUri } from './RouterContext';
+import { Route } from './types';
 
 /**
  * Renders the first one that matches the current URL.

@@ -1,8 +1,9 @@
+import { ksBehaviourSubject } from '@keiii/k-stream';
 import { FC } from 'react';
+import URI from 'urijs';
+
 import { RouterContext } from './RouterContext';
 import { Router } from './types';
-import { ksBehaviourSubject } from '@keiii/k-stream';
-import URI from 'urijs';
 
 const router = ((): Router => {
   const getUri = () => new URI(window.location).origin('');

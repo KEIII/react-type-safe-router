@@ -1,10 +1,11 @@
+import { flow } from 'fp-ts/function';
+import * as Option from 'fp-ts/Option';
+import { Decoder, HasProps, exact } from 'io-ts';
 import { FC } from 'react';
 import utpl from 'uri-templates';
-import { Decoder, exact, HasProps } from 'io-ts';
-import * as Option from 'fp-ts/Option';
-import { RouteWithParams, RouteSimple } from './types';
 import URI from 'urijs';
-import { flow } from 'fp-ts/function';
+
+import { RouteSimple, RouteWithParams } from './types';
 
 type DecoderT<A> = Decoder<unknown, A> & HasProps;
 

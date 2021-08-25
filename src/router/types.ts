@@ -1,6 +1,6 @@
+import { BehaviourSubject } from '@keiii/k-stream';
 import { Option } from 'fp-ts/Option';
 import { FC } from 'react';
-import { BehaviourSubject } from '@keiii/k-stream';
 import URI from 'urijs';
 
 export type Router = {

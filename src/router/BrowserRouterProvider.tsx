@@ -12,7 +12,7 @@ const router = ((): Router => {
 
   const fireEvent = () => {
     const nextUri = getUri();
-    if (!uri.value.equals(nextUri)) {
+    if (!uri.getValue().equals(nextUri)) {
       uri.next(nextUri);
     }
   };

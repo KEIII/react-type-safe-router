@@ -12,7 +12,7 @@ export type Router = {
 export type RouteWithParams<A extends Record<string, unknown>> = {
   match: (uri: URI) => Option<A>;
   uri: (params: A) => URI;
-  component: FC<A>;
+  component: FC<{ params: BehaviourSubject<A> }>;
 };
 
 export type RouteSimple = {

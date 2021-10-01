@@ -1,3 +1,4 @@
+import { BehaviourSubject } from '@keiii/k-stream';
 import { flow } from 'fp-ts/function';
 import * as Option from 'fp-ts/Option';
 import { Decoder, HasProps, exact } from 'io-ts';
@@ -16,7 +17,7 @@ type DecoderT<A> = Decoder<unknown, A> & HasProps;
 export const routeWithParams = <A extends Record<string, unknown>>(args: {
   decoder: DecoderT<A>;
   template: string;
-  component: FC<A>;
+  component: FC<{ params: BehaviourSubject<A> }>;
 }): RouteWithParams<A> => {
   const uriTemplate = utpl(args.template);
   const { decode, encode } = exact(args.decoder);

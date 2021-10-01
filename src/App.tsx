@@ -1,13 +1,16 @@
-import { RouteSwitch } from './router/RouteSwitch';
-import { FC } from 'react';
-import * as t from 'io-ts';
-import { NumberFromString } from './NumberFromString';
+import { BehaviourSubject } from '@keiii/k-stream';
 import * as Option from 'fp-ts/Option';
-import { Route } from './router/types';
-import { useRouter } from './router/RouterContext';
-import { routeSimple, routeWithParams } from './router/createRoute';
+import * as t from 'io-ts';
+import { FC } from 'react';
 import URI from 'urijs';
+
+import { NumberFromString } from './NumberFromString';
 import { BrowserRouterProvider as RouterProvider } from './router/BrowserRouterProvider';
+import { routeSimple, routeWithParams } from './router/createRoute';
+import { useRouter } from './router/RouterContext';
+import { RouteSwitch } from './router/RouteSwitch';
+import { Route } from './router/types';
+import { useBehaviourSubject } from './router/useBehaviourSubject';
 
 const page = (name: string): FC => {
   return props => (
@@ -56,12 +59,47 @@ const home = routeSimple({
   component: page('Home'),
 });
 
+let i = 0;
+
+const Debug = <T extends unknown>({
+  value,
+}: {
+  value: BehaviourSubject<T>;
+}) => {
+  const x = useBehaviourSubject(value);
+  return <pre>{JSON.stringify(x, null, 2)}</pre>;
+};
+
+const ColourShape = ({
+  params,
+}: {
+  params: BehaviourSubject<{ colour: string; shape: string }>;
+}) => {
+  const router = useRouter();
+  return (
+    <div>
+      <Debug value={params} />
+      <div>
+        <button
+          onClick={() => {
+            router.push(
+              URI(`http://localhost:3000/date/c-orange/s-cube${i++}/`),
+            );
+          }}
+        >
+          Push State
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const routeMap = {
   home,
   colourShape: routeWithParams({
     decoder: t.type({ colour: t.string, shape: t.string }),
     template: '/date/c-{colour}/s-{shape}/{?a,b}',
-    component: page('Color & Shape'),
+    component: ColourShape,
   }),
   items: routeSimple({
     pathname: '/items',

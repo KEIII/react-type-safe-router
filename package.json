@@ -5,15 +5,15 @@
   "dependencies": {
     "@keiii/k-stream": "0.0.42",
     "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.1.0",
+    "@testing-library/react": "^12.1.1",
     "@testing-library/user-event": "^13.2.1",
     "@types/jest": "^27.0.2",
-    "@types/node": "^16.9.6",
-    "@types/react": "^17.0.24",
+    "@types/node": "^16.10.2",
+    "@types/react": "^17.0.26",
     "@types/react-dom": "^17.0.9",
     "@types/uri-templates": "^0.1.31",
     "@types/urijs": "^1.19.17",
-    "fp-ts": "^2.11.3",
+    "fp-ts": "^2.11.4",
     "import-sort-style-module": "^6.0.0",
     "io-ts": "^2.2.16",
     "prettier": "^2.4.1",
@@ -54,5 +54,12 @@
       "style": "module",
       "parser": "typescript"
     }
+  },
+  "prettier": {
+    "arrowParens": "avoid",
+    "jsxSingleQuote": true,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "endOfLine": "auto"
   }
 }
